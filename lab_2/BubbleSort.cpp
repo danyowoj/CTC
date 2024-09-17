@@ -1,86 +1,51 @@
-#include <stdio.h>
-#include <stdlib.h>
+#include <iostream>
+#include <ctime>
 
-void FillInc(int A[], int n)
+void FillRand(int array[], int size)
 {
     int i;
-    for (i = 0; i < n; i++)
+    for (i = 0; i < size; i++)
     {
-        A[i] = i;
+        array[i] = rand() % 100;
     }
 }
 
-void FillDec(int A[], int n)
+void PrintArr(int array[], int size)
 {
-    int i;
-    for (i = 0; i < n; i++)
+    for (int i = 0; i < size; i++)
     {
-        A[i] = n - i;
-    }
-}
-
-void FillRand(int A[], int n)
-{
-    int i;
-    for (i = 0; i < n; i++)
-    {
-        A[i] = rand() % 100;
-    }
-}
-
-void PrintMas(int A[], int n)
-{
-    for (int i = 0; i < n; i++)
-    {
-        printf(" %d", A[i]);
+        printf(" %d", array[i]);
     }
     printf("\n");
 }
 
-void BubbleSort(int A[], int n)
+double BubbleSort(int array[], int size)
 {
     int i, j, temp;
-    int M = 0, C = 0; // количество пересылок и сравнений
-    for (i = 0; i < n - 1; i++)
+    for (i = 0; i < size - 1; i++)
     {
-        for (j = n - 1; j >= i + 1; j--)
+        for (j = size - 1; j >= i + 1; j--)
         {
-            C++;
-            if (A[j] < A[j - 1])
+            if (array[j] < array[j - 1])
             {
-                temp = A[j];
-                A[j] = A[j - 1];
-                A[j - 1] = temp;
-                M += 3;
+                temp = array[j];
+                array[j] = array[j - 1];
+                array[j - 1] = temp;
             }
         }
     }
-    printf("fact M + C = %d\n", M + C);
+    return clock() / 1000.0;
 }
 
 main()
 {
-    int n;
-
-    for (n = 100; n <= 500; n += 100)
+    for (int size = 1000; size <= 10000; size += 1000)
     {
-        int A[n];
-        printf("\n\n n = %d\n", n);
+        int array[size];
+        std::cout << "\nArray size = " << size << std::endl;
 
-        printf("\nDec arr\n");
-        FillDec(A, n);
-        printf("theor M + C = %d\n", 3 * (n * n - n) / 2 + (n * n - n) / 2);
-        BubbleSort(A, n);
-
-        printf("\nRand arr\n");
-        FillRand(A, n);
-        printf("theor M + C %d\n", 3 * (n * n - n) / 4 + (n * n - n) / 2);
-        BubbleSort(A, n);
-
-        printf("\nInc arr\n");
-        FillInc(A, n);
-        printf("theor M + C = %d\n", 0 + (n * n - n) / 2);
-        BubbleSort(A, n);
+        FillRand(array, size);
+        std::cout << "Runtime: " << BubbleSort(array, size) << std::endl;
     }
     return 0;
 }
