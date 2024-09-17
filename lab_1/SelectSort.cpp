@@ -1,6 +1,5 @@
-#include <stdlib.h>
-#include <stdio.h>
 #include <iostream>
+#include <ctime>
 
 void FillRand(int array[], int size)
 {
@@ -9,16 +8,6 @@ void FillRand(int array[], int size)
     {
         array[i] = rand() % 100;
     }
-}
-
-void CheckSum(int array[], int size)
-{
-    int i, sum = 0;
-    for (i = 0; i < size; i++)
-    {
-        sum += array[i];
-    }
-    printf("%d\n", sum);
 }
 
 void PrintArr(int array[], int size)
@@ -30,22 +19,10 @@ void PrintArr(int array[], int size)
     printf("\n");
 }
 
-void RunNumber(int array[], int size)
-{
-    int i, k = 1;
-    for (i = 0; i < size; i++)
-    {
-        if (array[i + 1] < array[i])
-        {
-            k++;
-        }
-    }
-    printf("%d\n", k);
-}
-
-void SelectSort(int array[], int size)
+double SelectSort(int array[], int size)
 {
     int i, j, temp, C = 0, M = 0;
+    std::cout << "\nSorting the array..." << std::endl;
     for (i = 0; i < size - 1; i++)
     {
         M += 3;
@@ -60,21 +37,22 @@ void SelectSort(int array[], int size)
             }
         }
     }
-    printf("\nActual complexity = %d; M = %d\n", C, M);
-    printf("Theoretical complexity = %d; M = %d\n", (size * size - size) / 2, 3 * (size - 1));
+    return clock() / 1000.0;
 }
 
 main()
 {
-    const int size = 10;
+    const int size = 500;
     int array[size];
     FillRand(array, size);
     std::cout << "Unsorted array:" << std::endl;
     PrintArr(array, size);
 
-    SelectSort(array, size);
+    double runtime = SelectSort(array, size);
     std::cout << "\nSorted array:" << std::endl;
     PrintArr(array, size);
+
+    std::cout << "\nRuntime: " << runtime << std::endl;
 
     return 0;
 }
