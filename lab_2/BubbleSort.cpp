@@ -39,7 +39,7 @@ double BubbleSort(int array[], int size)
 
 main()
 {
-    for (int size = 1000; size <= 10000; size += 1000)
+    for (int size = 1000; size <= 100000; size += 1000)
     {
         int array[size];
         std::cout << "\nArray size = " << size << std::endl;
