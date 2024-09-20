@@ -1,6 +1,6 @@
-/* Iterative C program for merge sort */
 #include <stdlib.h>
 #include <stdio.h>
+#include <iostream>
 #include <ctime>
 
 /* Function to merge the two haves arr[l..m] and arr[m+1..r] of array arr[] */
@@ -95,11 +95,11 @@ void printArray(int A[], int size)
 {
     int i;
     for (i = 0; i < size; i++)
-        printf("%d ", A[i]);
-    printf("\n");
+        std::cout << A[i] << " ";
+    std::cout << std::endl;
 }
 
-void FillRand(int array[], int size)
+void fillRand(int array[], int size)
 {
     int i;
     for (i = 0; i < size; i++)
@@ -108,23 +108,22 @@ void FillRand(int array[], int size)
     }
 }
 
-/* Driver program to test above functions */
 int main()
 {
-    const int n = 500;
+    const int n = 100;
     int arr[n];
 
-    FillRand(arr, n);
+    fillRand(arr, n);
 
-    printf("Given array is \n");
+    std::cout << "Given array is" << std::endl;
     printArray(arr, n);
 
     double runtime = mergeSort(arr, n);
 
-    printf("\nSorted array is \n");
+    std::cout << "\nSorted array is" << std::endl;
     printArray(arr, n);
 
-    printf("\nRuntime: %.6f", runtime);
+    std::cout << "Runtime: " << runtime << std::endl;
 
     return 0;
 }
