@@ -2,12 +2,22 @@
 #include <stdio.h>
 #include <iostream>
 #include <ctime>
+#include <array>
 
 /* Function to merge the two haves arr[l..m] and arr[m+1..r] of array arr[] */
 void merge(int arr[], int l, int m, int r);
 
 // Utility function to find minimum of two integers
 int min(int x, int y) { return (x < y) ? x : y; }
+
+/* Function to print an array */
+void printArray(int A[], int size)
+{
+    int i;
+    for (i = 0; i < size; i++)
+        std::cout << A[i] << " ";
+    std::cout << std::endl;
+}
 
 /* Iterative mergesort function to sort arr[0...n-1] */
 double mergeSort(int arr[], int n)
@@ -34,6 +44,14 @@ double mergeSort(int arr[], int n)
             // Merge Subarrays arr[left_start...mid] & arr[mid+1...right_end]
             merge(arr, left_start, mid, right_end);
         }
+        std::cout << "Divide by " << curr_size * 2 << ": ";
+        for (int i = 0; i < n; i++)
+        {
+            std::cout << arr[i] << " ";
+            if ((i + 1) % (curr_size * 2) == 0)
+                std::cout << "| ";
+        }
+        std::cout << std::endl;
     }
     return clock() / 1000.0;
 }
@@ -90,15 +108,6 @@ void merge(int arr[], int l, int m, int r)
     }
 }
 
-/* Function to print an array */
-void printArray(int A[], int size)
-{
-    int i;
-    for (i = 0; i < size; i++)
-        std::cout << A[i] << " ";
-    std::cout << std::endl;
-}
-
 void fillRand(int array[], int size)
 {
     int i;
@@ -110,20 +119,19 @@ void fillRand(int array[], int size)
 
 int main()
 {
-    const int n = 100;
-    int arr[n];
-
-    fillRand(arr, n);
+    int arr[] = {8, 3, 7, 2, 6, 5, 2, 4, 6, 1, 5, 3, 7, 0};
+    const int n = std::end(arr) - std::begin(arr);
 
     std::cout << "Given array is" << std::endl;
     printArray(arr, n);
+    std::cout << std::endl;
 
     double runtime = mergeSort(arr, n);
 
     std::cout << "\nSorted array is" << std::endl;
     printArray(arr, n);
 
-    std::cout << "Runtime: " << runtime << std::endl;
+    std::cout << "\nRuntime: " << runtime << std::endl;
 
     return 0;
 }
