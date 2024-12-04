@@ -1,80 +1,119 @@
 #include <iostream>
-#include <string>
-#include <algorithm>
 #include <vector>
+#include <string>
+#include <iomanip>
 
-using namespace std;
-
-// Функция для умножения столбиком двух целых чисел
-long long multiply_column(long long num1, long long num2)
+std::string multiply_large_numbers(const std::string &num1, const std::string &num2)
 {
-    // Обработка знака.  Используем побитовое XOR для определения знака результата.
-    // Если одно из чисел отрицательное, а другое положительное, результат будет отрицательным.
-    bool negative = (num1 < 0) ^ (num2 < 0);
-    // Берем абсолютные значения для упрощения вычислений
-    num1 = abs(num1);
-    num2 = abs(num2);
+    int len1 = num1.size();
+    int len2 = num2.size();
+    std::vector<int> result(len1 + len2, 0);
 
-    // Преобразуем числа в строки для удобства работы с отдельными цифрами
-    string s1 = to_string(num1);
-    string s2 = to_string(num2);
-
-    // Вектор для хранения промежуточных произведений (частных произведений)
-    vector<long long> partial_products(s2.length(), 0);
-    // Вектор для хранения промежуточных произведений в виде строк (для вывода на экран)
-    vector<string> partial_product_strings(s2.length());
-
-    // Цикл по цифрам второго числа (умножаемого)
-    for (int i = s2.length() - 1; i >= 0; --i)
+    // Умножаем каждую цифру первого числа на каждую цифру второго числа
+    for (int i = len1 - 1; i >= 0; --i)
     {
-        long long digit2 = s2[i] - '0'; // Извлекаем цифру из строки
-        long long carry = 0;            // Перенос
-        string partial_product;         // Строка для хранения промежуточного произведения
-
-        // Цикл по цифрам первого числа (множителя)
-        for (int j = s1.length() - 1; j >= 0; --j)
+        for (int j = len2 - 1; j >= 0; --j)
         {
-            long long digit1 = s1[j] - '0';                              // Извлекаем цифру из строки
-            long long product = digit1 * digit2 + carry;                 // Умножаем цифры и добавляем перенос
-            carry = product / 10;                                        // Новый перенос
-            partial_product = to_string(product % 10) + partial_product; // Добавляем последнюю цифру к строке
+            int mul = (num1[i] - '0') * (num2[j] - '0');
+            int sum = mul + result[i + j + 1];
+
+            result[i + j + 1] = sum % 10; // сохраняем последнюю цифру
+            result[i + j] += sum / 10;    // добавляем десятки к следующему разряду
         }
-        // Если после обработки всех цифр первого числа остаётся перенос, добавляем его к строке
-        if (carry > 0)
-            partial_product = to_string(carry) + partial_product;
-
-        partial_product += string(s2.length() - 1 - i, '0'); // Добавляем нули в конец промежуточного произведения в зависимости от позиции цифры во втором числе
-        partial_product_strings[i] = partial_product;        // Сохраняем строку промежуточного произведения
-        partial_products[i] = stoll(partial_product);        // Преобразуем строку в long long и сохраняем в векторе
     }
 
-    // Суммируем все промежуточные произведения
-    long long result = 0;
-    for (long long pp : partial_products)
-        result += pp;
-
-    // Вывод промежуточных результатов для наглядности
-    cout << "-------------------------" << endl;
-    cout << "Промежуточные результаты:" << endl;
-    for (const string &str : partial_product_strings)
+    // Преобразуем результат в строку
+    std::string result_str;
+    for (int num : result)
     {
-        cout << str << endl;
+        if (!(result_str.empty() && num == 0))
+        { // избегаем ведущих нулей
+            result_str.push_back(num + '0');
+        }
     }
-    cout << "-------------------------" << endl;
 
-    // Возвращаем результат с учетом знака
-    return negative ? -result : result;
+    return result_str.empty() ? "0" : result_str;
+}
+
+void print_multiplication_process(const std::string &num1, const std::string &num2)
+{
+    std::cout << "Умножение столбиком:\n";
+    std::cout << " " << std::string(std::max(num1.size(), num2.size()) + 2, '-') << "\n";
+    std::cout << "| " << num1 << "\n";
+    std::cout << "|× " << num2 << "\n";
+    std::cout << " " << std::string(std::max(num1.size(), num2.size()) + 2, '-') << "\n";
+
+    std::vector<std::string> intermediate_results;
+
+    for (int j = num2.size() - 1; j >= 0; --j)
+    {
+        int digit = num2[j] - '0';
+        if (digit == 0)
+        {
+            intermediate_results.push_back("0");
+            continue;
+        }
+
+        std::string current_result;
+        int carry = 0;
+
+        // Умножаем текущую цифру второго числа на первое число
+        for (int i = num1.size() - 1; i >= 0; --i)
+        {
+            int mul = digit * (num1[i] - '0') + carry;
+            current_result.insert(current_result.begin(), (mul % 10) + '0');
+            carry = mul / 10;
+        }
+
+        // Добавляем остаток от деления, если он есть
+        if (carry > 0)
+        {
+            current_result.insert(current_result.begin(), carry + '0');
+        }
+
+        // Добавляем нули в конец текущего результата
+        current_result.append(num2.size() - 1 - j, '0');
+        intermediate_results.push_back(current_result);
+    }
+
+    // Выравниваем промежуточные результаты и выводим их
+    size_t max_width = std::max(num1.size() + num2.size(), intermediate_results.back().size());
+    for (size_t i = 0; i < intermediate_results.size(); ++i)
+    {
+        std::cout << std::setw(max_width) << intermediate_results[i] << "\n";
+    }
+
+    // Суммируем результаты и отображаем итог
+    std::cout << "+" << std::string(max_width - 1, '-') << "\n";
 }
 
 int main()
 {
-    long long num1, num2;
-    cout << "Введите первое число: ";
-    cin >> num1;
-    cout << "Введите второе число: ";
-    cin >> num2;
-    long long product = multiply_column(num1, num2);
-    cout << "Результат: " << product << endl;
+    std::string num1, num2;
 
+    std::cout << "Введите первое число (до 20 знаков): ";
+    std::cin >> num1;
+    std::cout << "Введите второе число (до 20 знаков): ";
+    std::cin >> num2;
+
+    // Проверка на наличие знака
+    bool negative_result = (num1[0] == '-' && num2[0] != '-') || (num1[0] != '-' && num2[0] == '-');
+    if (num1[0] == '-' || num2[0] == '-')
+    {
+        num1 = num1[0] == '-' ? num1.substr(1) : num1;
+        num2 = num2[0] == '-' ? num2.substr(1) : num2;
+    }
+
+    // Печатаем процесс умножения
+    print_multiplication_process(num1, num2);
+
+    std::string result = multiply_large_numbers(num1, num2);
+
+    if (negative_result && result != "0")
+    {
+        result = "-" + result;
+    }
+
+    std::cout << "Результат: " << result << "\n";
     return 0;
 }
