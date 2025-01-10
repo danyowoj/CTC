@@ -62,8 +62,7 @@ void matrixChainOrder(const std::vector<int> &dimensions)
 int main()
 {
     // Пример использования
-    // Матрицы с размерами 2x3, 3x4, 4x5
-    std::vector<int> dimensions = {2, 3, 4, 5};
+    std::vector<int> dimensions = {10, 20, 50, 1, 100, 10, 10, 10, 10, 10};
 
     // Вызываем функцию для расчета
     matrixChainOrder(dimensions);
